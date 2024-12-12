@@ -1,12 +1,12 @@
-﻿# Import required module
+# Import required module
 Import-Module ActiveDirectory
 
-# Path to the HR export CSV file
-$inputCsvPath = "C:\temp\file.csv"
+# Path to the paycom export CSV file
+$inputCsvPath = "C:\temp\singleusertest.csv" # UPDATE BEFORE RUNNING #
 
 # Generate output folder with script name and date
-$scriptName = "OnPremUserAttributeUpdate"
-$dateStamp = (Get-Date -Format "yyyy-MM-dd_HH-mm-ss")
+$scriptName = "UpdateOnPremUsers"
+$dateStamp = (Get-Date -Format "yyyy-MM-dd")
 $outputFolder = "C:\temp\$scriptName`_$dateStamp"
 
 # Create the output folder
@@ -15,7 +15,7 @@ if (-Not (Test-Path $outputFolder)) {
 }
 
 # Define output file paths
-$outputCsvPath = "$outputFolder\OnPremUserUpdates.csv"
+$outputCsvPath = "$outputFolder\OnPremUserUpdateResult.csv"
 $notFoundCsvPath = "$outputFolder\UsersNotOnPrem.csv"
 
 # Import the CSV file
@@ -94,10 +94,8 @@ foreach ($user in $users) {
         }
 
     } catch {
-        # User does not exist, log the result
-        $notFoundUsers += [PSCustomObject]@{
-            Email = $email
-        }
+        # User does not exist, log the full row
+        $notFoundUsers += $user
         Write-Host "User not found: $email" -ForegroundColor Red
     }
 }
@@ -114,7 +112,7 @@ if ($results.Count -gt 0) {
 # Export not found users to a separate CSV file
 if ($notFoundUsers.Count -gt 0) {
     $notFoundUsers | Export-Csv -Path $notFoundCsvPath -NoTypeInformation -Force
-    Write-Host "Users not found exported to $notFoundCsvPath. Use this file as unput for ExtractAzureUsers.ps1" -ForegroundColor Yellow
+    Write-Host "Users not found exported to $notFoundCsvPath. Use this file as unput for UpdateAzureOnlyUsers.ps1" -ForegroundColor Yellow
 } else {
     Write-Host "No users were not found." -ForegroundColor Green
 }
