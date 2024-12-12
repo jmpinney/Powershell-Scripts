@@ -1,18 +1,13 @@
-﻿###### RUN EXTRACTAZUREUSERS.ps1 FIRST #####
-
-
-
+﻿###### RUN UpdateOnPremUsers.ps1 FIRST #####
 # Import Microsoft Graph module
 Import-Module Microsoft.Graph.Users
 
-
-
 ###### UPDATE THIS PATH BEFORE SCRIPT IS RAN #####
-$inputCsvPath = "C:\temp\ExtractedAzureUsers.csv" # Path to the input CSV file from ExtractAzureUsers.ps1
+$inputCsvPath = "C:\temp\ExtractedAzureUsers.csv" # Path to the UsersNotOnPrem.csv file output from UpdateOnPremUsers.ps1
 
 # Generate output folder with script name and date
-$scriptName = "GraphAPIUserAttributeUpdate"
-$dateStamp = (Get-Date -Format "yyyy-MM-dd_HH-mm-ss")
+$scriptName = "UpdateAzureOnlyUsers"
+$dateStamp = (Get-Date -Format "yyyy-MM-dd")
 $outputFolder = "C:\temp\$scriptName`_$dateStamp"
 
 # Create the output folder
